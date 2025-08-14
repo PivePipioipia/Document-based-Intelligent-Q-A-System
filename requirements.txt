@@ -1,0 +1,9 @@
+# requirements.txt
+langchain
+langchain-community
+sentence-transformers
+chromadb
+tiktoken
+groq
+gradio
+langchain-groq
