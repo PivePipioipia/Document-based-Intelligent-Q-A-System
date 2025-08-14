@@ -17,15 +17,16 @@ Bạn có thể trải nghiệm trực tiếp Trợ Lý AI Pháp Lý tại đây
 
 ## Cài Đặt và Chạy Dự Án Cục Bộ
 
-### 1. Chuẩn bị Môi trường
-Dự án yêu cầu Python 3.9 trở lên. Bạn nên sử dụng virtual environment để quản lý các thư viện.
 
-```bash
-# Tạo và kích hoạt virtual environment
+
+### 1. Cài đặt môi trường
+Tạo và kích hoạt virtual environment
 python -m venv .venv
-# Trên Windows
+
+Trên Windows
 .venv\Scripts\activate
-# Trên macOS/Linux
+
+Trên macOS/Linux
 source .venv/bin/activate
 
 ### 2.Cài đặt các Thư viện
