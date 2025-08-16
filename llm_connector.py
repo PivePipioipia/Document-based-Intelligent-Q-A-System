@@ -1,4 +1,3 @@
-# llm_connector.py
 import logging
 from langchain_groq import ChatGroq
 
@@ -13,19 +12,18 @@ class LLMConnector:
     def connect(self):
         """Kết nối và khởi tạo LLM thông qua Groq API"""
         try:
-            logger.info(f"🔄 Đang kết nối tới Large Language Model (LLM): {self.model_name} qua Groq API...")
+            logger.info(f" Đang kết nối tới Large Language Model (LLM): {self.model_name} qua Groq API...")
             self.llm = ChatGroq(
                 groq_api_key=self.groq_api_key,
                 model_name=self.model_name
             )
 
-            # Thử gửi một câu lệnh đơn giản để kiểm tra kết nối
-            self.llm.invoke("Xin chào!")
+            self.llm.invoke("Xin chào")
 
-            logger.info(f"✅ Kết nối tới LLM '{self.model_name}' thành công!")
+            logger.info(f" Kết nối tới LLM '{self.model_name}' thành công!")
             return self.llm
 
         except Exception as e:
-            logger.error(f"❌ Lỗi nghiêm trọng khi kết nối tới LLM: {e}")
-            logger.error("Hãy đảm bảo rằng GROQ_API_KEY là chính xác và có kết nối internet.")
+            logger.error(f" Lỗi khi kết nối tới LLM: {e}")
+            logger.error("Kiểm tra GROQ_API_KEY và kết nối internet.")
             return None
