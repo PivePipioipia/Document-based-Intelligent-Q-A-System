@@ -31,7 +31,7 @@ def initialize_system():
     print("        KHỞI TẠO HỆ THỐNG RAG CHO GIAO DIỆN WEB")
     print("=" * 65)
 
-    # Tải lại Vector Database
+    # Tải lại VD
     vector_store_loader = VectorStoreLoader(
         db_directory=DATABASE_PATH,
         collection_name=COLLECTION_NAME,
@@ -93,7 +93,7 @@ def initialize_system():
         rag_chain=rag_chain
     )
 
-    logger.info("✅ Tất cả thành phần đã sẵn sàng!")
+    logger.info("Tất cả thành phần đã sẵn sàng!")
     return legal_agent
 
 
@@ -102,30 +102,30 @@ try:
     legal_agent = initialize_system()
 except Exception as e:
     legal_agent = None
-    logger.error(f"❌ Lỗi nghiêm trọng khi khởi tạo hệ thống: {e}")
+    logger.error(f"Lỗi khi khởi tạo hệ thống: {e}")
 
 
 # --- 2. Định nghĩa hàm xử lý cho Gradio ---
 def chat_with_agent(question, history):
     if not legal_agent:
-        return "Xin lỗi, hệ thống đang gặp lỗi. Vui lòng thử lại sau.", history
+        return "Hệ thống đang gặp lỗi. Vui lòng thử lại sau.", history
 
     start_time = time.time()
     try:
-        # Sử dụng phương thức ask của Agent để xử lý câu hỏi
+        
         answer = legal_agent.ask(question)
         end_time = time.time()
 
-        # In kết quả xử lý
+        # In kết quả 
         logger.info(f"Thời gian xử lý: {end_time - start_time:.2f} giây")
 
-        # Cập nhật lịch sử chat cho Gradio
+        # Cập nhật lịch sử chat
         history.append((question, answer))
         return "", history
 
     except Exception as e:
         logger.error(f"Lỗi khi xử lý câu hỏi từ người dùng: {e}")
-        error_message = f"Xin lỗi, có lỗi xảy ra trong quá trình xử lý: {e}"
+        error_message = f"Có lỗi xảy ra trong quá trình xử lý: {e}"
         history.append((question, error_message))
         return "", history
 
@@ -140,21 +140,21 @@ with gr.Blocks(title="Trợ Lý AI Pháp Lý (RAG + Agent)") as demo:
         """
     )
 
-    # Hiển thị lịch sử chat
+   
     chatbot = gr.Chatbot(height=500)
 
-    # Khung nhập liệu
+    
     msg = gr.Textbox(
         label="Câu hỏi của bạn:",
         placeholder="Ví dụ: Dữ liệu cá nhân nhạy cảm là gì?"
     )
 
-    # Nút gửi và nút xóa
+    
     with gr.Row():
         clear_btn = gr.ClearButton([msg, chatbot], value="Xóa")
         submit_btn = gr.Button("Gửi", variant="primary")
 
-    # Xử lý sự kiện khi người dùng gửi câu hỏi
+    
     submit_btn.click(
         chat_with_agent,
         inputs=[msg, chatbot],
@@ -179,4 +179,4 @@ with gr.Blocks(title="Trợ Lý AI Pháp Lý (RAG + Agent)") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(share=True)  # share=True để tạo link public cho Hugging Face Spaces
+    demo.launch(share=True)  
