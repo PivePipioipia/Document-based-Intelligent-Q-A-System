@@ -1,11 +1,9 @@
-# text_processor.py
 import re
 import logging
 from typing import List, Dict, Any
 from pathlib import Path
 from datetime import datetime
 
-# Cấu hình logging
 logger = logging.getLogger(__name__)
 
 class TextProcessor:
@@ -23,10 +21,10 @@ class TextProcessor:
                 raise FileNotFoundError(f"Không tìm thấy file: {file_path}")
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
-            logger.info(f"✅ Đã đọc thành công {len(content)} ký tự từ {file_path.name}")
+            logger.info(f" Đã đọc thành công {len(content)} ký tự từ {file_path.name}")
             return content
         except Exception as e:
-            logger.error(f"❌ Lỗi khi đọc file: {e}")
+            logger.error(f" Lỗi khi đọc file: {e}")
             return ""
 
     def clean_text(self, text: str) -> str:
@@ -40,7 +38,7 @@ class TextProcessor:
         lines = [line.strip() for line in text.splitlines() if line.strip()]
         cleaned_text = '\n'.join(lines)
 
-        logger.info(f"🧹 Văn bản sau khi làm sạch: {len(cleaned_text)} ký tự")
+        logger.info(f" Văn bản sau khi làm sạch: {len(cleaned_text)} ký tự")
         return cleaned_text
 
     def _split_by_sentence(self, text: str, chunk_size: int, overlap: int) -> List[Dict[str, Any]]:
@@ -69,7 +67,7 @@ class TextProcessor:
                 "length": len(doc_content)
             })
 
-        logger.info(f"📝 Đã tạo {len(chunks)} chunks theo câu.")
+        logger.info(f" Đã tạo {len(chunks)} chunks theo câu.")
         return chunks
 
     def _split_by_law_article(self, text: str, max_chars_per_chunk: int) -> List[Dict[str, Any]]:
@@ -119,13 +117,13 @@ class TextProcessor:
         final_chunks = []
         for chunk in chunks:
             if chunk['length'] > max_chars_per_chunk:
-                logger.warning(f"⚠️ Chunk '{chunk['metadata']['heading']}' quá dài ({chunk['length']} ký tự). Sẽ chia nhỏ hơn.")
+                logger.warning(f" Chunk '{chunk['metadata']['heading']}' quá dài ({chunk['length']} ký tự). Sẽ chia nhỏ hơn.")
                 smaller_chunks_data = self._split_by_sentence(chunk['content'], max_chars_per_chunk, overlap=int(max_chars_per_chunk*0.1))
                 final_chunks.extend(smaller_chunks_data)
             else:
                 final_chunks.append(chunk)
 
-        logger.info(f"📝 Đã tạo {len(final_chunks)} chunks dựa trên cấu trúc Điều/Chương.")
+        logger.info(f" Đã tạo {len(final_chunks)} chunks dựa trên cấu trúc Điều/Chương.")
         return final_chunks
 
     def split_into_chunks(self, text: str, chunk_size: int = 1500, overlap: int = 150, strategy: str = "law_article") -> List[Dict[str, Any]]:
@@ -137,5 +135,5 @@ class TextProcessor:
         elif strategy == "sentence":
             return self._split_by_sentence(text, chunk_size, overlap)
         else:
-            logger.error(f"❌ Chiến lược chunking không hợp lệ: {strategy}. Sử dụng 'sentence' làm mặc định.")
+            logger.error(f" Chiến lược chunking không hợp lệ: {strategy}. Sử dụng 'sentence' làm mặc định.")
             return self._split_by_sentence(text, chunk_size, overlap)
